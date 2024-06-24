@@ -1,0 +1,131 @@
+<html>
+<head>
+	<style>
+	#area {
+		width:600px;
+		height:300px;
+		background:white;
+		/*border:1px black solid;*/
+		position:relative;
+		top:50%;
+		left:50%;
+		transform:translate(-50%,-50%);
+	}
+	#grass {
+		width:600px;
+		height:300px;
+		background:url("grass.png");
+		position:absolute;
+		background-position:0px 0px;
+		background-repeat:repeat-x;
+		animation:move 5s linear infinite paused;
+	
+	}
+	@keyframes move {
+		0% {background-position:0 0;}
+		100% {background-position:100% 0;}
+	}
+	
+	
+	#duck {
+		width:80px;
+		height:80px;
+		position:absolute;
+		left:30px;
+		top:230px;
+	}
+	
+	.garbage {
+		width:60px;
+		height:60px;
+		position:absolute;
+		right:10px;
+		top:255px;
+	}
+	</style>
+	
+	<script>
+		function get(id) {
+			return document.getElementById(id);
+		}
+		function gameInit() {
+			setInterval(garbage_create);
+		}
+		function getRnd(min,max) {
+			return Math.floor(Math.randon()*(max-min+1))+min;
+		}
+		function start(){
+			 get("grass").style.animationPlayState="running";
+		}
+		function duck_jump() {
+			const duck = document.getElementById('duck');
+			let jumping = false;
+			let jumphigh = 0;
+			
+			if(!jumping) {
+				jumping = true;
+				let timeid = setInterval(function(){
+					if(jumphigh==15){
+						
+						let downtimeid = setInterval(function(){
+							if(jumphigh==0){
+								
+								jumping=false;
+							}else{
+								jumphigh--;
+								let position = jumphigh*10;
+								duck.style.bottom = position+'px';
+							}
+						},30)
+					}else{
+						jumphigh++;
+						let position = jumphigh*10;
+						duck.style.bottom = position+'px';
+					}
+				},30);
+			}
+		}
+		function keydown(ev){
+			if(ev.key==" "){
+				duck_jump();
+			}
+		}
+		function garbage_create() {
+			var g=document.createElement("img");
+			g.src="garbage.png";
+			g.classname="garbage";
+			g.w=60;g.h=60;
+			g.pos={x:600,y=50};
+			document.body.appendChuld(g);
+			g.move=setInterval(function(){garbage_move();},500);
+		}
+		function garbage_move() {
+			if (g.pos.x<0) {
+				clearInterval(g,move);
+				g.parentNode.removeChild(g);
+				return;
+			}
+			g.pos.x-= getRnd(5,10);
+			g.style.left=g.pos.x+"px";
+		}
+		function gameover() {
+                alert('遊戲結束！');
+                location.reload(); 
+        }
+		
+	
+	</script>
+</head>
+<body>
+	<div id="area">
+		<button onclick="start()">開始</button>
+		<div id="grass"></div>
+		<img id="duck" src="duck2.png">
+		<img class="garbage" src="garbage.png">
+
+		
+
+	</div>
+
+</body>
+</html>
